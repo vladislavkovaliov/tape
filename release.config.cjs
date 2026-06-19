@@ -36,10 +36,16 @@ module.exports = {
         ],
         '@semantic-release/changelog',
         [
+            '@semantic-release/npm',
+            {
+                npmPublish: false,
+            },
+        ],
+        [
             '@semantic-release/exec',
             {
                 prepareCmd:
-                    'npm pkg set version=$SEMANTIC_RELEASE_NEXT_VERSION && npm run build && cd build/chrome-mv3-prod && zip -r ../../tape-v$SEMANTIC_RELEASE_NEXT_VERSION.zip .',
+                    'npm run build && cd build/chrome-mv3-prod && zip -r ../../tape-v$(node -p "require(\'../../package.json\').version").zip .',
             },
         ],
         [
