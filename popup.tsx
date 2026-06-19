@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useStorage } from "@plasmohq/storage/hook"
+import { useStorage } from "./src/lib/use-storage"
 import type { Script, RecorderStatus } from "./src/lib/types"
 import { STORAGE_KEYS } from "./src/lib/constants"
 

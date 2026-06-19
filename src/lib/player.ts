@@ -1,5 +1,5 @@
-import { CommandStack, Command } from "wi-command-stack"
-import { Storage } from "@plasmohq/storage"
+import { CommandStack, Command } from "./command-stack"
+import { Storage } from "./storage"
 import { SelectorEngine } from "./selector-engine"
 import type { Action, PendingReplay } from "./types"
 import { STORAGE_KEYS } from "./constants"
@@ -60,10 +60,6 @@ class ReplayCommand extends Command<Action[]> {
 
   async undo(state: Action[]): Promise<Action[]> {
     return state.slice(0, -1)
-  }
-
-  private sleep(ms: number): Promise<void> {
-    return new Promise((r) => setTimeout(r, ms))
   }
 }
 
