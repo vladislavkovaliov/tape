@@ -1,5 +1,5 @@
 {
-  "name": "tape-plasmo",
+  "name": "tape",
   "displayName": "Tape",
   "version": "0.0.1",
   "description": "Record and replay browser actions. Macro recorder for the browser.",
