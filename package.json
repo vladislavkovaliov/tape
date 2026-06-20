@@ -1,7 +1,7 @@
 {
   "name": "tape",
   "displayName": "Tape",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Record and replay browser actions. Macro recorder for the browser.",
   "author": "Vlad Kovaliov <v.v.kovaliov@gmail.com>",
   "scripts": {
