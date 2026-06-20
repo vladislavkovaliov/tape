@@ -1,4 +1,4 @@
-import { Storage } from "./lib/storage"
+import { Storage } from "@plasmohq/storage"
 import type { Script } from "./lib/types"
 import { STORAGE_KEYS, generateId } from "./lib/constants"
 import { log } from "./lib/logger"

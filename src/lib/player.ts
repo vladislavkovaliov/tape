@@ -1,5 +1,5 @@
-import { CommandStack, Command } from "./command-stack"
-import { Storage } from "./storage"
+import { CommandStack, Command } from "wi-command-stack"
+import { Storage } from "@plasmohq/storage"
 import { SelectorEngine } from "./selector-engine"
 import type { Action, PendingReplay } from "./types"
 import { STORAGE_KEYS } from "./constants"
@@ -20,7 +20,7 @@ class ReplayCommand extends Command<Action[]> {
       case "scroll": {
         const [x, y] = (this.action.value ?? "0,0").split(",").map(Number)
         window.scrollTo({ left: x, top: y, behavior: "smooth" })
-        await this.sleep(300)
+        await new Promise((r) => setTimeout(r, 300))
         return [..._state, this.action]
       }
 

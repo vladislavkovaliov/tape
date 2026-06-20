@@ -1,5 +1,5 @@
 import type { PlasmoCSConfig } from "plasmo"
-import { Storage } from "./lib/storage"
+import { Storage } from "@plasmohq/storage"
 import { Recorder } from "./lib/recorder"
 import { Player } from "./lib/player"
 import type { Action, PendingReplay, RecorderStatus, Script } from "./lib/types"
