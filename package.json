@@ -42,6 +42,7 @@
   },
   "manifest": {
     "action": {
+      "default_title": "Tape — Record & Replay",
       "default_popup": "popup.html"
     },
     "permissions": [
