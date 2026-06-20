@@ -1,3 +1,9 @@
+## [1.1.0](https://github.com/vladislavkovaliov/tape/compare/v1.0.2...v1.1.0) (2026-06-20)
+
+### Features
+
+* feat: prepare to publish (a5f0419)
+
 ## [1.0.2](https://github.com/vladislavkovaliov/tape/compare/v1.0.1...v1.0.2) (2026-06-20)
 
 ### Fixes
