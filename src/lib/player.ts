@@ -5,7 +5,7 @@ import type { Action, PendingReplay } from "./types"
 import { STORAGE_KEYS } from "./constants"
 import { log } from "./logger"
 
-const storage = new Storage()
+const storage = new Storage({ area: "local" })
 
 class ReplayCommand extends Command<Action[]> {
   constructor(

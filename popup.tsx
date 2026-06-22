@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react"
+import { Storage } from "@plasmohq/storage"
 import { useStorage } from "@plasmohq/storage/hook"
-import type { Script, RecorderStatus } from "./src/lib/types"
+import type { ScriptMeta, RecorderStatus } from "./src/lib/types"
 import { STORAGE_KEYS } from "./src/lib/constants"
+
+const popupStorage = new Storage({ area: "local" })
 
 function sendToBg(msg: Record<string, unknown>): Promise<any> {
   return chrome.runtime.sendMessage(msg)
@@ -31,9 +34,12 @@ function formatDuration(ms: number): string {
 
 function IndexPopup() {
   const [tabId, setTabId] = useState<number | null>(null)
-  const [scripts, setScripts] = useStorage<Script[]>(STORAGE_KEYS.SCRIPTS, [])
+  const [scriptsMeta] = useStorage<ScriptMeta[]>(
+    { key: STORAGE_KEYS.SCRIPTS_INDEX, instance: popupStorage },
+    [],
+  )
   const [status, setStatus] = useStorage<RecorderStatus>(
-    STORAGE_KEYS.STATUS,
+    { key: STORAGE_KEYS.STATUS, instance: popupStorage },
     "idle",
   )
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -70,7 +76,7 @@ function IndexPopup() {
     await sendToBg({ action: "delete-script", scriptId })
   }
 
-  const startRename = (script: Script) => {
+  const startRename = (script: ScriptMeta) => {
     setEditingId(script.id)
     setEditName(script.name)
   }
@@ -165,7 +171,7 @@ function IndexPopup() {
         Scripts
       </div>
 
-      {scripts.length === 0 ? (
+      {scriptsMeta.length === 0 ? (
         <div
           style={{
             color: "#9ca3af",
@@ -178,7 +184,7 @@ function IndexPopup() {
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-          {[...scripts].reverse().map((script) => (
+          {[...scriptsMeta].reverse().map((script) => (
             <div
               key={script.id}
               style={{
@@ -230,7 +236,7 @@ function IndexPopup() {
                   </div>
                 )}
                 <div style={{ fontSize: 11, color: "#9ca3af" }}>
-                  {script.actions.length} actions · {formatDuration(script.durationMs)} ·{" "}
+                  {script.actionCount} actions · {formatDuration(script.durationMs)} ·{" "}
                   {new URL(script.url).hostname}
                 </div>
               </div>

@@ -2,15 +2,15 @@ import type { PlasmoCSConfig } from "plasmo"
 import { Storage } from "@plasmohq/storage"
 import { Recorder } from "./lib/recorder"
 import { Player } from "./lib/player"
-import type { Action, PendingReplay, RecorderStatus, Script } from "./lib/types"
-import { STORAGE_KEYS, generateId } from "./lib/constants"
+import type { Action, PendingReplay, RecorderStatus, Script, ScriptMeta } from "./lib/types"
+import { STORAGE_KEYS, scriptKey, generateId } from "./lib/constants"
 import { log } from "./lib/logger"
 
 export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"],
 }
 
-const storage = new Storage()
+const storage = new Storage({ area: "local" })
 const recorder = new Recorder()
 const player = new Player()
 
@@ -39,9 +39,20 @@ async function saveScript(actions: Action[]): Promise<void> {
     updatedAt: Date.now(),
   }
 
-  const existing = (await storage.get<Script[]>(STORAGE_KEYS.SCRIPTS)) || []
-  existing.push(script)
-  await storage.set(STORAGE_KEYS.SCRIPTS, existing)
+  const meta: ScriptMeta = {
+    id: script.id,
+    name: script.name,
+    url: script.url,
+    actionCount: script.actions.length,
+    durationMs: script.durationMs,
+    createdAt: script.createdAt,
+    updatedAt: script.updatedAt,
+  }
+
+  await storage.set(scriptKey(script.id), script)
+  const index = (await storage.get<ScriptMeta[]>(STORAGE_KEYS.SCRIPTS_INDEX)) || []
+  index.push(meta)
+  await storage.set(STORAGE_KEYS.SCRIPTS_INDEX, index)
 }
 
 function setStatus(status: RecorderStatus): void {

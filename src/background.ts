@@ -1,9 +1,9 @@
 import { Storage } from "@plasmohq/storage"
-import type { Script } from "./lib/types"
-import { STORAGE_KEYS, generateId } from "./lib/constants"
+import type { Script, ScriptMeta } from "./lib/types"
+import { STORAGE_KEYS, scriptKey, generateId } from "./lib/constants"
 import { log } from "./lib/logger"
 
-const storage = new Storage()
+const storage = new Storage({ area: "local" })
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.source === "content") {
@@ -47,8 +47,7 @@ async function handlePopupMessage(msg: any, sendResponse: (resp: any) => void) {
       }
 
       case "start-replay": {
-        const scripts = (await storage.get<Script[]>(STORAGE_KEYS.SCRIPTS)) || []
-        const script = scripts.find((s: Script) => s.id === msg.scriptId)
+        const script = await storage.get<Script>(scriptKey(msg.scriptId))
         if (!script) {
           sendResponse({ error: "Script not found" })
           return
@@ -62,22 +61,28 @@ async function handlePopupMessage(msg: any, sendResponse: (resp: any) => void) {
       }
 
       case "delete-script": {
-        const scripts = (await storage.get<Script[]>(STORAGE_KEYS.SCRIPTS)) || []
-        const filtered = scripts.filter((s: Script) => s.id !== msg.scriptId)
-        await storage.set(STORAGE_KEYS.SCRIPTS, filtered)
+        await storage.remove(scriptKey(msg.scriptId))
+        const index = (await storage.get<ScriptMeta[]>(STORAGE_KEYS.SCRIPTS_INDEX)) || []
+        const filtered = index.filter((s) => s.id !== msg.scriptId)
+        await storage.set(STORAGE_KEYS.SCRIPTS_INDEX, filtered)
         sendResponse({ success: true })
         break
       }
 
       case "rename-script": {
-        const scripts = (await storage.get<Script[]>(STORAGE_KEYS.SCRIPTS)) || []
-        const idx = scripts.findIndex((s: Script) => s.id === msg.scriptId)
-        if (idx === -1) {
+        const script = await storage.get<Script>(scriptKey(msg.scriptId))
+        if (!script) {
           sendResponse({ error: "Script not found" })
           return
         }
-        scripts[idx] = { ...scripts[idx], name: msg.name, updatedAt: Date.now() }
-        await storage.set(STORAGE_KEYS.SCRIPTS, scripts)
+        const updated = { ...script, name: msg.name, updatedAt: Date.now() }
+        await storage.set(scriptKey(msg.scriptId), updated)
+        const index = (await storage.get<ScriptMeta[]>(STORAGE_KEYS.SCRIPTS_INDEX)) || []
+        const idx = index.findIndex((s) => s.id === msg.scriptId)
+        if (idx !== -1) {
+          index[idx] = { ...index[idx], name: msg.name, updatedAt: Date.now() }
+          await storage.set(STORAGE_KEYS.SCRIPTS_INDEX, index)
+        }
         sendResponse({ success: true })
         break
       }

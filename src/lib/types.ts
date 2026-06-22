@@ -15,6 +15,16 @@ export interface Selector {
   nthPath?: string
 }
 
+export interface ScriptMeta {
+  id: string
+  name: string
+  url: string
+  actionCount: number
+  durationMs: number
+  createdAt: number
+  updatedAt: number
+}
+
 export interface Script {
   id: string
   name: string
