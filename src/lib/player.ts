@@ -32,10 +32,11 @@ class ReplayCommand extends Command<Action[]> {
           return [..._state, this.action]
         }
 
-        const el = await this.selectorEngine.resolve(this.action.selector)
+        const el = await this.selectorEngine.resolve(this.action.selector, 5000)
         if (!el) {
-          log.warn(`Element not found for ${this.action.type}: ${JSON.stringify(this.action.selector)}`)
-          return [..._state, this.action]
+          throw new Error(
+            `Element not found for ${this.action.type}: ${JSON.stringify(this.action.selector)}`,
+          )
         }
 
         if (this.action.type === "click") {
@@ -98,8 +99,14 @@ export class Player {
         break
       }
 
-      const cmd = new ReplayCommand(action, this.selectorEngine)
-      await this.stack.execute(cmd)
+      try {
+        const cmd = new ReplayCommand(action, this.selectorEngine)
+        await this.stack.execute(cmd)
+      } catch (e) {
+        log.error(e)
+        this.stopped = true
+        break
+      }
 
       onProgress?.(i + 1, actions.length)
       await this.sleep(400)

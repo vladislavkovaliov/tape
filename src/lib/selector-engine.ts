@@ -90,9 +90,7 @@ export class SelectorEngine {
         if (!parent) break
 
         const tag = current.tagName.toLowerCase()
-        const siblings = Array.from(parent.children).filter(
-          (s) => s.tagName === current.tagName,
-        )
+        const siblings = Array.from(parent.children)
         const index = siblings.indexOf(current) + 1
         const suffix = siblings.length > 1 ? `:nth-child(${index})` : ""
         parts.unshift(`${tag}${suffix}`)
