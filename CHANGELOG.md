@@ -1,3 +1,9 @@
+## [1.2.0](https://github.com/vladislavkovaliov/tape/compare/v1.1.0...v1.2.0) (2026-06-22)
+
+### Features
+
+* feat: fixs error handlers (c3e9143)
+
 ## [1.1.0](https://github.com/vladislavkovaliov/tape/compare/v1.0.2...v1.1.0) (2026-06-20)
 
 ### Features
