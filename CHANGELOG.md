@@ -1,3 +1,9 @@
+## [1.3.0](https://github.com/vladislavkovaliov/tape/compare/v1.2.0...v1.3.0) (2026-06-22)
+
+### Features
+
+* feat: storage limit async (d0f6f4c)
+
 ## [1.2.0](https://github.com/vladislavkovaliov/tape/compare/v1.1.0...v1.2.0) (2026-06-22)
 
 ### Features
